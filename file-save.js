@@ -5,6 +5,8 @@ module.exports.process = function (dataArray, callback) {
         brainWave = "";
 
     dataArray.forEach(function (dataWindow) {
+        var rawEegLine = '';
+
         dataWindow.forEach(function (dataPackage) {
             dataPackage.split('\r')
                 .filter(function(element){
@@ -13,14 +15,14 @@ module.exports.process = function (dataArray, callback) {
                     var elementObj = JSON.parse(dataElement);
 
                     if (elementObj.hasOwnProperty("rawEeg")) {
-                        rawEeg += elementObj["rawEeg"] + ",";
+                        rawEegLine += elementObj["rawEeg"] + ",";
                     } else {
                         brainWave += dataElement;
                     }
             });
         });
 
-        rawEeg += "\r\n";
+        rawEeg += rawEegLine + rawEegLine.split(',').length+"\r\n";
         brainWave += "\r\n";
     });
 
