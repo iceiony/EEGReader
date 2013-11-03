@@ -1,26 +1,21 @@
+//noinspection JSUnresolvedFunction,SpellCheckingInspection
 var net = require('net'),
     keypress = require('keypress'),
     fs = require('fs');
 
-
 var socket = new net.Socket(),
     data = [],
-    trialData = [],
+    dataBuffer = [],
     record = false;
+
+
+var clearScreen = function(){
+    console.log('\033[2J');
+}
 
 keypress(process.stdin);
 process.stdin.on('keypress', function (ch, key) {
-    if (key && key.name === 'up') {
-        record = true;
-        setTimeout(function () {
-            data.push(trialData);
-            trialData = [];
-            record = false;
-        }, 500);
-    }
-
     if (key && key.ctrl && key.name == 'c') {
-        //todo: end the process and save all data
         fs.writeFile("data.txt", JSON.stringify(data), function () {
             process.exit();
         });
@@ -32,15 +27,14 @@ if (process.stdin.constructor.name.toLowerCase() !== 'socket') {
 }
 process.stdin.resume();
 
-
 socket.on('error', function (error) {
     console.log(error);
 })
 
 socket.on('data', function (buffer) {
     if (record) {
-        console.log(buffer);
-        trialData.push( buffer );
+        console.log(".");
+        dataBuffer.push( buffer );
     }
 })
 
@@ -60,3 +54,14 @@ socket.connect(13854, '127.0.0.1', function () {
     });
 
 });
+
+setInterval(function(){
+    record = false;
+    data.push(dataBuffer);
+    clearScreen();
+    setTimeout(function(){process.stdout.write(".")},500);
+    setTimeout(function(){process.stdout.write(".")},1000);
+    setTimeout(function(){process.stdout.write(".")},1500);
+    setTimeout(function(){ record = true;}, 1950); //record a few milliseconds before
+    setTimeout(function(){process.stdout.write("GO")},2000);
+},2140);
