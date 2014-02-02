@@ -5,8 +5,8 @@ var net = require('net'),
 
 var socket = new net.Socket(),
     data = [],
-    dataBuffer = [],
-    record = false,
+    dataRow = [],
+    isRecording = false,
     interval;
 
 
@@ -32,9 +32,9 @@ socket.on('error', function (error) {
 })
 
 socket.on('data', function (buffer) {
-    if (record) {
+    if (isRecording) {
         //process.stdout.write("!");
-        dataBuffer.push( buffer );
+        dataRow.push( buffer );
     }
 })
 
@@ -53,15 +53,15 @@ socket.connect(13854, '127.0.0.1', function () {
         console.log("Configuration sent" + JSON.stringify(arguments));
 
         interval = setInterval(function(){
-            record = false;
-            data.push(dataBuffer);
-            dataBuffer = [];
+            isRecording = false;
+            data.push(dataRow);
+            dataRow = [];
             clearScreen();
 
             setTimeout(function(){process.stdout.write(".")},500);
             setTimeout(function(){process.stdout.write(".")},1000);
             setTimeout(function(){process.stdout.write(".")},1500);
-            setTimeout(function(){ record = true;}, 1950); //record a few milliseconds before
+            setTimeout(function(){ isRecording = true;}, 1950); //record a few milliseconds before
             setTimeout(function(){process.stdout.write("GO")},2000);
         },2140);
 

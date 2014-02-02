@@ -26,8 +26,8 @@ module.exports.process = function (dataArray, callback) {
         brainWave += "\r\n";
     });
 
-    fs.writeFile("./rawEeg.txt", rawEeg, function () {
-        fs.writeFile("./brainWave.txt", brainWave, function () {
+    fs.writeFile("./out/rawEeg.txt", rawEeg, function () {
+        fs.writeFile("./out/brainWave.txt", brainWave, function () {
             callback();
         });
     });

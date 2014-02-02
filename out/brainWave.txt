@@ -1,0 +1,14 @@
+
+
+
+
+
+
+
+{"eSense":{"attention":60,"meditation":30},"eegPower":{"delta":6121,"theta":1542,"lowAlpha":756,"highAlpha":2005,"lowBeta":3817,"highBeta":2037,"lowGamma":1328,"highGamma":1087},"poorSignalLevel":0}
+
+
+
+
+
+{"eSense":{"attention":48,"meditation":75},"eegPower":{"delta":9230,"theta":14315,"lowAlpha":6666,"highAlpha":2392,"lowBeta":9825,"highBeta":2848,"lowGamma":3875,"highGamma":660},"poorSignalLevel":0}
