@@ -5,6 +5,7 @@
     "start": "node app"
   },
   "dependencies": {
-    "keypress": "~0.2.1"
+    "keypress": "~0.2.1",
+    "gm": "~1.14.2"
   }
 }
