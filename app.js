@@ -18,7 +18,9 @@ keypress(process.stdin);
 process.stdin.on('keypress', function (ch, key) {
     if (key && key.ctrl && key.name == 'c') {
         clearInterval(interval);
-        save.process(data,process.exit);
+        save.asText(data,function(){
+            save.asImage(process.exit);
+        });
     }
 });
 //webstorm loads the process in a container and overwrites stdin stream
