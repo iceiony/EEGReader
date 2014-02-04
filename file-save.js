@@ -43,7 +43,7 @@ module.exports.asImage = function(dataArray,callback){
         image;
 
 
-    console.log("Saving data as csv....");
+    console.log("Saving data as img....");
 
     dataArray.forEach(function (dataWindow) {
         var rawEegLine = [];
@@ -70,11 +70,15 @@ module.exports.asImage = function(dataArray,callback){
     rawEegFullData.forEach(function(rawDataLine,y){
         rawDataLine.forEach(function(data,x){
              var greenValue = data + colourOffset,
-                 colour= "rgb(0, " + greenValue + ", 0)";
-
-            if(greenValue < 0) console.log("Warning, overflow on colour: " + greenValue) ;
-            if(greenValue > 255) console.log("Warning, overflow on colour: " + greenValue);
-
+                 redValue = greenValue < 0 ? 0 - Math.floor(greenValue * 1) : 0,
+                 blueValue = greenValue > 255 ? Math.floor(greenValue * 1) - 255 : 0,
+                colour; 
+            
+            if( greenValue < 0 || greenValue > 255 ) greenValue = 255;
+            
+            colour = "rgb("+ redValue +", " + greenValue + ", "+ blueValue +")";
+            console.log(colour);
+            
             image.fill(colour).drawRectangle(x*2,y*2,(x+1)*2,(y+1)*2);
         });
     });
@@ -82,9 +86,7 @@ module.exports.asImage = function(dataArray,callback){
     image.write('./out/rawEeg.png', function(err){
         if (err) {
             console.dir(arguments);
-            callback();
         }
-
-        console.log(this.outname + ' created :: ' + arguments[3]);
+        callback();
     });
 };
