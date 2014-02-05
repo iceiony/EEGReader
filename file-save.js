@@ -70,14 +70,18 @@ var _generateImage = function(data,callback){
     
     data.forEach(function(line,y){
         line.forEach(function(element,x){
-            var greenValue = element + colourOffset,
-                redValue = greenValue < 0 ? 0 - Math.floor(greenValue) : 0,
-                blueValue = greenValue > 255 ? Math.floor(greenValue) - 255 : 0,
+            var green = element + colourOffset,
+                red = green < 0 ? 0 - Math.floor(green) : 0,
+                blue = green > 255 ? Math.floor(green) - 255 : 0,
                 colour;
 
-            if( greenValue < 0 || greenValue > 255 ) greenValue = 255;
+            if( green < 0 || green > 255 ) green = 255;
+            if( red > 255 ) { blue = red - 255 ; red = 255 }
+            if( blue > 255 ) { red = blue - 255; blue = 255}
+            if( red < 0 )  { blue = 0 - red ; red = 0 }
+            if( blue < 0 ) { red = 0 - red ; blue = 0 }
 
-            colour = "rgb("+ redValue +", " + greenValue + ", "+ blueValue +")";
+            colour = "rgb("+ red +", " + green + ", "+ blue +")";
             //console.log(colour);
             
             ctx.fillStyle = colour;
@@ -107,9 +111,8 @@ module.exports.asImage = function(dataArray,callback){
                 });
         });
         
-        if(rawEegLine.length > 1 ) {
-            rawEegFullData.push(rawEegLine);
-        }
+        if(rawEegLine.length > 1 ) rawEegFullData.push(rawEegLine);
+        else  console.log("Warning! record discarded since it had no data");
     });
 
     _generateImage(rawEegFullData,callback);
