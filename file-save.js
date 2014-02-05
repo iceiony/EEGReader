@@ -49,6 +49,9 @@ var _generateImage = function(data,callback){
             if(maxColumnCount<row.length) maxColumnCount = row.length;         
     });
     
+    console.log(data.length + " recordings");
+    console.log(maxColumnCount + " max recording count");
+    
     canvas = new Canvas(maxColumnCount*2,data.length*2);
     out = fs.createWriteStream("./out/rawEeg.png");
     stream = canvas.createPNGStream();
@@ -64,8 +67,6 @@ var _generateImage = function(data,callback){
 
     ctx.fillStyle = "rgb(0,0,0)";
     ctx.fillRect(0,0, canvas.width,canvas.height);
-    console.log(canvas.width);
-    console.log(canvas.height);
     
     data.forEach(function(line,y){
         line.forEach(function(element,x){
