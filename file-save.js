@@ -1,5 +1,5 @@
 var fs = require('fs'),
-    gm = require('gm');
+    Canvas = require('canvas');
 
 module.exports.asText = function (dataArray, callback) {
     var rawEeg = "",
@@ -36,13 +36,58 @@ module.exports.asText = function (dataArray, callback) {
     });
 };
 
-module.exports.asImage = function(dataArray,callback){
-    var rawEegFullData = [],
+
+var _generateImage = function(data,callback){
+    var colourOffset = 50,
         maxColumnCount = 0,
-        colourOffset = 50,
-        image;
+        canvas,
+        ctx,
+        out,
+        stream;
 
+    data.forEach(function(row){
+            if(maxColumnCount<row.length) maxColumnCount = row.length;         
+    });
+    
+    canvas = new Canvas(maxColumnCount*2,data.length*2);
+    out = fs.createWriteStream("./out/rawEeg.png");
+    stream = canvas.createPNGStream();
+    ctx = canvas.getContext("2d");
 
+    stream.on('data',function(chunk){
+        out.write(chunk);
+    });
+
+    stream.on('end',function(){
+        out.end(callback);
+    });
+
+    ctx.fillStyle = "rgb(0,0,0)";
+    ctx.fillRect(0,0, canvas.width,canvas.height);
+    console.log(canvas.width);
+    console.log(canvas.height);
+    
+    data.forEach(function(line,y){
+        line.forEach(function(element,x){
+            var greenValue = element + colourOffset,
+                redValue = greenValue < 0 ? 0 - Math.floor(greenValue * 1) : 0,
+                blueValue = greenValue > 255 ? Math.floor(greenValue * 1) - 255 : 0,
+                colour;
+
+            if( greenValue < 0 || greenValue > 255 ) greenValue = 255;
+
+            colour = "rgb("+ redValue +", " + greenValue + ", "+ blueValue +")";
+            //console.log(colour);
+            
+            ctx.fillStyle = colour;
+            ctx.fillRect(x*2,y*2,2,2);
+        });
+    });
+};
+
+module.exports.asImage = function(dataArray,callback){   
+    var rawEegFullData = [];
+    
     console.log("Saving data as img....");
 
     dataArray.forEach(function (dataWindow) {
@@ -60,33 +105,11 @@ module.exports.asImage = function(dataArray,callback){
                     }
                 });
         });
-        rawEegFullData.push(rawEegLine);
-
-        if(maxColumnCount<rawEegLine.length) maxColumnCount = rawEegLine.length;
-    });
-
-    image = gm(maxColumnCount*2,rawEegFullData.length*2,"rgb(0,0,0)");
-
-    rawEegFullData.forEach(function(rawDataLine,y){
-        rawDataLine.forEach(function(data,x){
-             var greenValue = data + colourOffset,
-                 redValue = greenValue < 0 ? 0 - Math.floor(greenValue * 1) : 0,
-                 blueValue = greenValue > 255 ? Math.floor(greenValue * 1) - 255 : 0,
-                colour; 
-            
-            if( greenValue < 0 || greenValue > 255 ) greenValue = 255;
-            
-            colour = "rgb("+ redValue +", " + greenValue + ", "+ blueValue +")";
-            console.log(colour);
-            
-            image.fill(colour).drawRectangle(x*2,y*2,(x+1)*2,(y+1)*2);
-        });
-    });
-
-    image.write('./out/rawEeg.png', function(err){
-        if (err) {
-            console.dir(arguments);
+        
+        if(rawEegLine.length > 1 ) {
+            rawEegFullData.push(rawEegLine);
         }
-        callback();
     });
+
+    _generateImage(rawEegFullData,callback);
 };
