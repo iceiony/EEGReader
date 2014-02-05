@@ -6,6 +6,6 @@
   },
   "dependencies": {
     "keypress": "~0.2.1",
-    "gm": "~1.14.2"
+    "canvas": "~1.1.3"
   }
 }
