@@ -1,4 +1,4 @@
-Tool for colecting raw EEG data from a MindSetThinkGear .
+Tool for colecting raw EEG data from a NeuroSky MindWave reader.
 
 It saves readigns as CSV and in PNG format ( image representative of each reading  ) .
 
