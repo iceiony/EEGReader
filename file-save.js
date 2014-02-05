@@ -71,8 +71,8 @@ var _generateImage = function(data,callback){
     data.forEach(function(line,y){
         line.forEach(function(element,x){
             var greenValue = element + colourOffset,
-                redValue = greenValue < 0 ? 0 - Math.floor(greenValue * 1.5) : 0,
-                blueValue = greenValue > 255 ? Math.floor(greenValue * 1.5) - 255 : 0,
+                redValue = greenValue < 0 ? 0 - Math.floor(greenValue) : 0,
+                blueValue = greenValue > 255 ? Math.floor(greenValue) - 255 : 0,
                 colour;
 
             if( greenValue < 0 || greenValue > 255 ) greenValue = 255;
