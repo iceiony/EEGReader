@@ -39,7 +39,7 @@ module.exports.asText = function (dataArray, callback) {
 
 
 var _generateImage = function(data,callback){
-    var distrib = new Distributor(3),
+    var distrib = new Distributor(5),
         pixelSize = 2,
         maxColumnCount = 0,
         canvas,

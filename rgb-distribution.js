@@ -7,6 +7,8 @@ exports.Distributor = function (base) {
 
     return {
         calculateRGB: function (eegValue) {
+            eegValue += 2048 ; //added since eegValues can be negative 
+            
             var r = 0,
                 g = 0,
                 b = 0,

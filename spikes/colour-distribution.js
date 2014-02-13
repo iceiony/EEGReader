@@ -1,14 +1,14 @@
 var Canvas = require('canvas'),
     Distributor = require('../rgb-distribution').Distributor;
 
-var base = 3,
+var base = 5,
     spectrumWidth = Math.pow(base,3),
     distrib = new Distributor(base),
-    minValToPlot = 0,
-    maxValToPlot = 1270,
+    minValToPlot = -2048,
+    maxValToPlot = 2047,
     pixelSize = 50,
     width = spectrumWidth * pixelSize, // 3rd root of length must be integer
-    length = Math.ceil(maxValToPlot/spectrumWidth) * pixelSize;
+    length = Math.ceil((maxValToPlot-minValToPlot)/spectrumWidth) * pixelSize;
     canvas = new Canvas(width,length),
     ctx = canvas.getContext("2d");
 
