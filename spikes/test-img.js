@@ -8,7 +8,7 @@ var fs = require('fs'),
 
   ctx.fillStyle = "rgb(0,125,0)";
   ctx.fillRect(0,0, canvas.width,canvas.height);
-  ctx.fillStyle = "rgb(0,200,0)";
+  ctx.fillStyle = "rgb(0,100,0)";
   ctx.fillRect(40, 10, 10, 10);
   ctx.fillRect(60, 10, 10, 10);
 
