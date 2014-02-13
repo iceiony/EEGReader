@@ -1,5 +1,6 @@
 var fs = require('fs'),
-    Canvas = require('canvas');
+    Canvas = require('canvas'),
+    Distributor = require('./rgb-distribution').Distributor;
 
 module.exports.asText = function (dataArray, callback) {
     var rawEeg = "",
@@ -38,7 +39,8 @@ module.exports.asText = function (dataArray, callback) {
 
 
 var _generateImage = function(data,callback){
-    var colourOffset = 50,
+    var distrib = new Distributor(3),
+        pixelSize = 2,
         maxColumnCount = 0,
         canvas,
         ctx,
@@ -70,22 +72,10 @@ var _generateImage = function(data,callback){
     
     data.forEach(function(line,y){
         line.forEach(function(element,x){
-            var green = element + colourOffset,
-                red = green < 0 ? 0 - Math.floor(green) : 0,
-                blue = green > 255 ? Math.floor(green) - 255 : 0,
-                colour;
+            var colour = "rgb(" + distrib.calculateRGB(element).join(',') + ")";;
 
-            if( green < 0 || green > 255 ) green = 255;
-            if( red > 255 ) { blue = red - 255 ; red = 255 }
-            if( blue > 255 ) { red = blue - 255; blue = 255}
-            if( red < 0 )  { blue = 0 - red ; red = 0 }
-            if( blue < 0 ) { red = 0 - red ; blue = 0 }
-
-            colour = "rgb("+ red +", " + green + ", "+ blue +")";
-            //console.log(colour);
-            
             ctx.fillStyle = colour;
-            ctx.fillRect(x*2,y*2,2,2);
+            ctx.fillRect(x*pixelSize,y*pixelSize,pixelSize,pixelSize);
         });
     });
 };
