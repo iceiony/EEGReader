@@ -1,5 +1,3 @@
-// gm - Copyright Aaron Heckmann <aaron.heckmann+github@gmail.com> (MIT Licensed)
-
 var Canvas = require('canvas'),
     canvas = new Canvas(525,110),
     ctx = canvas.getContext("2d");

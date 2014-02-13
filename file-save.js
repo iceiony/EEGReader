@@ -91,7 +91,9 @@ var _generateImage = function(data,callback){
 };
 
 module.exports.asImage = function(dataArray,callback){   
-    var rawEegFullData = [];
+    var rawEegFullData = [],
+        maxEeg = -2000,
+        minEeg = 2000;
     
     console.log("Saving data as img....");
 
@@ -107,7 +109,11 @@ module.exports.asImage = function(dataArray,callback){
 
                     if (elementObj.hasOwnProperty("rawEeg")) {
                         rawEegLine.push(elementObj["rawEeg"])
+                        
+                        maxEeg = Math.max(maxEeg,elementObj["rawEeg"]);
+                        minEeg = Math.min(minEeg,elementObj["rawEeg"]);
                     }
+                    
                 });
         });
         
@@ -115,5 +121,8 @@ module.exports.asImage = function(dataArray,callback){
         else  console.log("Warning! record discarded since it had no data");
     });
 
+    console.log("MaxEeg recorded value: " + maxEeg );
+    console.log("MinEeg recorded value: " + minEeg );
+    
     _generateImage(rawEegFullData,callback);
 };
